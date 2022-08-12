@@ -1,0 +1,5 @@
+CREATE DATABASE GMapDB
+CREATE TABLE [dbo].[MarkersTable]
+(
+	[Id] INT NOT NULL PRIMARY KEY	
+)
