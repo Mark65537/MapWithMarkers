@@ -6,3 +6,9 @@ CREATE TABLE [GMapDB].[dbo].[MarkersTable]
 	[latitude] text NOT NULL,
     [longitude] text NOT NULL	
 )
+GO
+INSERT [GMapDB].[dbo].[MarkersTable] VALUES('56,0043','92,9')
+GO
+INSERT [GMapDB].[dbo].[MarkersTable] VALUES('55,9945409308007','92,9635620117188')
+GO
+INSERT [GMapDB].[dbo].[MarkersTable] VALUES('56,0659029633004','92,8605651855469')

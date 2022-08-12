@@ -6,9 +6,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.SqlServer.Server;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
 
 namespace MapWithMarkers
 {
@@ -17,7 +14,6 @@ namespace MapWithMarkers
         GMapOverlay overlay = new GMapOverlay("my");// создание именованного слоя
         GMapMarker selectedMarker;
         SqlConnection connection;
-        //ServerConnection sc;
         SqlCommand command=new SqlCommand();
         string sqlConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         string databaseName = "GMapDB";
@@ -45,7 +41,6 @@ namespace MapWithMarkers
         {
             try
             {
-                //sc = new ServerConnection(new Microsoft.Data.SqlClient.SqlConnection(sqlConnectionString));//если не писать полностью, то тогда не видет
                 connection = new SqlConnection(sqlConnectionString);
                 connection.Open();
                 return true;
@@ -80,8 +75,6 @@ namespace MapWithMarkers
                 command.CommandText = s;
                 command.ExecuteNonQuery();
             }
-            command.CommandText = $"USE {databaseName}";
-            command.ExecuteNonQuery();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -91,7 +84,7 @@ namespace MapWithMarkers
             {
                 if(!CheckDatabaseExists())
                     CreateDB();
-                else
+                
                     ReadDB();
             }
                 
@@ -99,23 +92,33 @@ namespace MapWithMarkers
 
         private void ReadDB()
         {
-            command.CommandText = "SELECT latitude, longitude FROM [GMapDB].[dbo].[MarkersTable]";
-            var reader = command.ExecuteReader();
-            if (reader.HasRows)
+            SqlDataReader reader = null;
+            try
             {
-                while (reader.Read()) // построчно считываем данные
+                command.CommandText = "SELECT latitude, longitude FROM [GMapDB].[dbo].[MarkersTable]";
+                reader = command.ExecuteReader();
+                if (reader.HasRows)
                 {
-                    var lat = (string)reader.GetValue(0);
-                    var lng = (string)reader.GetValue(1);
+                    while (reader.Read()) // построчно считываем данные
+                    {
+                        var lat = (string)reader.GetValue(0);
+                        var lng = (string)reader.GetValue(1);
 
-                    GMarkerGoogle marker = new GMarkerGoogle(
-                            new PointLatLng(double.Parse(lat), double.Parse(lng)),
-                            GMarkerGoogleType.red);
+                        GMarkerGoogle marker = new GMarkerGoogle(
+                                new PointLatLng(double.Parse(lat), double.Parse(lng)),
+                                GMarkerGoogleType.red);
 
-                    overlay.Markers.Add(marker);
+                        overlay.Markers.Add(marker);
+                    }
                 }
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            reader.Close();
+            finally
+            {
+                reader.Close();
+            }            
         }
 
         private void gMapCtrl_MouseDown(object sender, MouseEventArgs e)
@@ -154,9 +157,7 @@ namespace MapWithMarkers
 
         private void b_saveInDB_Click(object sender, EventArgs e)
         {
-            command.CommandText = $"USE {databaseName}";
-            command.ExecuteNonQuery();
-            command.CommandText = "DELETE FROM [dbo].[MarkersTable]";
+            command.CommandText = $"DELETE FROM {databaseName}.[dbo].[MarkersTable]";
             command.ExecuteNonQuery();
             try
             {
@@ -164,7 +165,7 @@ namespace MapWithMarkers
                 {
                     foreach (var marker in overlay.Markers)
                     {
-                        command.CommandText = $"INSERT [GMapDB].[dbo].[MarkersTable] VALUES(\'{marker.Position.Lat}\', \'{marker.Position.Lng}\')";
+                        command.CommandText = $"INSERT {databaseName}.[dbo].[MarkersTable] VALUES(\'{marker.Position.Lat}\', \'{marker.Position.Lng}\')";
                         command.ExecuteNonQuery();
                     }
                     MessageBox.Show("Изменения сохранены в базу", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
