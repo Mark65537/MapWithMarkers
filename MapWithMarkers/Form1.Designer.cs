@@ -80,7 +80,7 @@
             this.Controls.Add(this.b_saveInDB);
             this.Controls.Add(this.gMapCtrl);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Карта";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
