@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.gMapCtrl = new GMap.NET.WindowsForms.GMapControl();
-            this.button1 = new System.Windows.Forms.Button();
+            this.b_saveInDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // gMapCtrl
@@ -61,14 +61,15 @@
             this.gMapCtrl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gMapCtrl_MouseDown);
             this.gMapCtrl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gMapCtrl_MouseUp);
             // 
-            // button1
+            // b_saveInDB
             // 
-            this.button1.Location = new System.Drawing.Point(692, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Запись в базу";
-            this.button1.UseVisualStyleBackColor = true;
+            this.b_saveInDB.Location = new System.Drawing.Point(692, 13);
+            this.b_saveInDB.Name = "b_saveInDB";
+            this.b_saveInDB.Size = new System.Drawing.Size(96, 23);
+            this.b_saveInDB.TabIndex = 1;
+            this.b_saveInDB.Text = "Запись в базу";
+            this.b_saveInDB.UseVisualStyleBackColor = true;
+            this.b_saveInDB.Click += new System.EventHandler(this.b_saveInDB_Click);
             // 
             // MainForm
             // 
@@ -76,10 +77,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(800, 471);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.b_saveInDB);
             this.Controls.Add(this.gMapCtrl);
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 
@@ -88,7 +90,7 @@
         #endregion
 
         private GMap.NET.WindowsForms.GMapControl gMapCtrl;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button b_saveInDB;
     }
 }
 
