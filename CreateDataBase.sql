@@ -1,5 +1,8 @@
 CREATE DATABASE GMapDB
-CREATE TABLE [dbo].[MarkersTable]
+GO
+CREATE TABLE [GMapDB].[dbo].[MarkersTable]
 (
-	[Id] INT NOT NULL PRIMARY KEY	
+	[Id] INT NOT NULL PRIMARY KEY,
+	[latitude] float NOT NULL,
+    [longitude] float NOT NULL	
 )
